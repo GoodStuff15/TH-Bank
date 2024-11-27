@@ -53,10 +53,12 @@ namespace TH_Bank
 
                     case 3:
                         // Transfer between accounts.
+                        MakeInternalTransaction(ActiveUserSingleton.GetInstance(), new AccountDataHandler());
                         break;
 
                     case 4:
                         //Transfer between customers.
+                        MakeExternalTransaction(ActiveUserSingleton.GetInstance(), new AccountDataHandler());
                         break;
 
                     case 5:
@@ -82,6 +84,35 @@ namespace TH_Bank
                 Console.WriteLine(acc.ToString());
             }
         }
+
+        //Lät interna/externa transaktioner vara kvar i två separata metoder. Blev så brötigt med val av transaktionstyp
+        //inne i en enda metod. Misstycker ni fullständigt så gör jag om.
+        public void MakeInternalTransaction(User user, AccountDataHandler activeUser)
+        {
+            //ShowAccounts();   Ska det verkligen vara en ActiveUserSingleton som inparameter till ShowAccounts?
+            
+            List<Account> accountList = activeUser.LoadAll(user.UserName);   //Behöver komma åt listan från ShowAccounts.
+                                                                             //Går det att göra på annat sätt?
+            Console.WriteLine("Enter account to transfer from: ");
+            optionCount = accountList.Count();
+            int indexFromAccount = Choice(optionCount);
+            int fromAccount = accountList[indexFromAccount - 1].AccountNumber;
+            Console.WriteLine("Enter account to transfer to: ");
+            int indexToAccount = Choice(optionCount);
+            int toAccount = accountList[indexToAccount - 1].AccountNumber;
+            Console.WriteLine("Enter amount to transfer: ");
+            decimal.TryParse(Console.ReadLine(), out decimal amount);    //Finns annan felhanteringslösning här?
+
+            //Transaction transaction = new TransactionFactory().CreateTransaction(amount, fromAccount, toAccount, Id);
+            //Id? Är det verkligen en inparameter? Eller är det ett transaktionsid unikt för detta transaktionsobjektet? 
+            //Isf borde det väl genereras automatiskt i konstruktorn för transaktionsobjektet?
+            //transaction.TransferFunds();
+        }
+        public void MakeExternalTransaction(User user, AccountDataHandler activeUser)
+        {
+
+        }
+        
 
     }
 }

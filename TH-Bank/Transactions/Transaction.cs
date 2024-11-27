@@ -37,11 +37,7 @@ namespace TH_Bank
                 return false;
             }
         }
-        public override string ToString()
-        {
-            return $"{TransferDate}|{Amount}|{FromAccount.AccountNumber}|{ToAccount.AccountNumber}";
-            //Add "Id" to ToString. Figure out a way to make this unique
-        }
+
         public void MakeTransaction(List<Account> accounts)
         {
             //Display all avalible accounts or option to enter new accountnumber
@@ -65,9 +61,15 @@ namespace TH_Bank
             Console.WriteLine("Ange beloppet du vill föra över: ");
             decimal Amount = decimal.Parse(Console.ReadLine()); // IMPLEMENTERA FELHANTERING**
 
-            var transaction = new TransactionFactory().CreateTransaction(Amount, FromAccount, ToAccount, Id);
-            transaction.TransferFunds();
+            //var transaction = new TransactionFactory().CreateTransaction(Amount, FromAccount, ToAccount, Id);
+            //transaction.TransferFunds();
         }
+        public override string ToString()
+        {
+            return $"{TransferDate}|{Amount}|{FromAccount.AccountNumber}|{ToAccount.AccountNumber}";
+            //Add "Id" to ToString. Figure out a way to make this unique
+        }
+        
 
     }
 }
