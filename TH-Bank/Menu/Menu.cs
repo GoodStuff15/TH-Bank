@@ -9,13 +9,15 @@
 
         public abstract void ShowMenu();
 
-        public abstract void ShowAccounts(ActiveUserSingleton activeUser, AccountDataHandler accountDataHandler);
+        public abstract void ShowAccounts(User user, AccountDataHandler activeUser);
 
         internal void Return() // Method to return to Login.
         {
             Console.Clear();
             Console.WriteLine("Taking you to home screen.");
-            Thread.Sleep(2500);
+            Thread.Sleep(2000);
+            Console.Clear();
+            Program.LogIn(new UserDataHandler());
             access = false;
             bool login = true;
             return;

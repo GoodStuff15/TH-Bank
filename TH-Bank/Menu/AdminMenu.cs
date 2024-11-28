@@ -19,6 +19,7 @@ namespace TH_Bank
 
         public override void ShowMenu()
         {
+            Console.Clear();
             DrawBorder();
             foreach (string item in _menu)
             {
@@ -29,7 +30,7 @@ namespace TH_Bank
             MenuAdmin();
         }
 
-        public override void ShowAccounts(ActiveUserSingleton activeUser, AccountDataHandler accountDataHandler)
+        public override void ShowAccounts(User user, AccountDataHandler activeUser)
         {
             throw new NotImplementedException();
         }
