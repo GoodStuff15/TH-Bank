@@ -27,9 +27,10 @@ namespace TH_Bank
             {
                 throw new Exception($"Invalid user type, can't create {userInput}");
             }
-
-
             return user;
         }
+
+        
+
     }
 }

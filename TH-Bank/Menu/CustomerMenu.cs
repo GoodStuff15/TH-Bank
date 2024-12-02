@@ -59,27 +59,25 @@ namespace TH_Bank
                     case 3:
                         MakeTransaction(ActiveUserSingleton.GetInstance(), new AccountDataHandler());
                         break;
-                        break;
-
                     case 4:
-                        // Lån alternativet.
-                        //Loan.ApplyForLoan(ActiveUserSingleton.GetInstance());
-
-                    case 5:
                         ApplyForLoan(ActiveUserSingleton.GetInstance(), new LoanDataHandler(), new LoanFactory(), new AccountDataHandler());
                         Console.Clear();
                         ShowMenu();
-
+                        break;
+                    case 5:
+                        CreateNewAccount(ActiveUserSingleton.GetInstance(), new AccountFactory(), new AccountDataHandler());
+                        Thread.Sleep(2500);
+                        Console.Clear();
+                        ShowMenu();
                         break;
                     case 6:
-                        // Spot for open new account.
-                        CreateNewAccount(ActiveUserSingleton.GetInstance(), new AccountFactory(), new AccountDataHandler());
-                        break;
-                    case 7:
                         Return(); //Log out.
                         break;
-                    case 8:
+                    case 7:
                         Close(); // Close application.
+                        break;
+
+                    case 8:
                         break;
                 }
             }
@@ -169,7 +167,7 @@ namespace TH_Bank
         public void ShowLoans(User user, LoanDataHandler loanUser)
         {
             int width = 20;
-            int center = 80; // Used for dividing lines, and to align column headers.
+            int center = 86; // Used for dividing lines, and to align column headers.
             string text = $".:{user.UserName}'s Loans:."; //Headline.
             int padding = (center - text.Length) / 2;
             string centeredText = new string('.', padding) + text + new string('.', padding);
@@ -342,7 +340,7 @@ namespace TH_Bank
                     return;
             }
 
-
+            
         }
 
         public void ApplyForLoan(User user, LoanDataHandler loanData, LoanFactory loanFactory, AccountDataHandler activeUser)

@@ -91,6 +91,8 @@ namespace TH_Bank
 
             while (!userValidation)
             {
+                
+                
                 Console.WriteLine("Welcome to TH-Bank.");
                 Console.WriteLine("Please enter your username: ");
                 userName = Console.ReadLine();
