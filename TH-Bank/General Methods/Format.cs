@@ -26,7 +26,7 @@ namespace TH_Bank
                     num = Convert.ToInt32(key.KeyChar.ToString());
                 }
 
-            } while (!isNumber || num > max); // exits while loop only if number is not bigger
+            } while (!isNumber || num > max || num == 0); // exits while loop only if number is not bigger
                                               // than the max index of the active users accounts.
             return num;
         }

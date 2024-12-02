@@ -59,7 +59,6 @@ namespace TH_Bank
                     case 3:
                         MakeTransaction(ActiveUserSingleton.GetInstance(), new AccountDataHandler());
                         break;
-                        break;
 
                     case 4:
                         // Lån alternativet.
@@ -211,7 +210,7 @@ namespace TH_Bank
         public void MakeTransaction(User user, AccountDataHandler adh)
         {
             ShowAccounts(user, adh);
-            Console.WriteLine("[1] Transaction between own accounts");
+            Console.WriteLine("\n[1] Transaction between own accounts");
             Console.WriteLine("[2] Transaction to external account");
             int transChoice = Format.Choice(2);
             Console.Clear();
@@ -228,7 +227,7 @@ namespace TH_Bank
             switch (transChoice)
             {
                 case 1:
-                    Console.WriteLine("[1] Transaction between own accounts");
+                    Console.WriteLine("\n[1] Transaction between own accounts");
                     int accChoiceFrom = ValidOwnAccount("from");
                     int accChoiceTo = ValidOwnAccount("to");
                     if (accChoiceTo == accChoiceFrom)
@@ -245,18 +244,22 @@ namespace TH_Bank
                     }
                     break;
                 case 2:
-                    Console.WriteLine("[2] Transaction to external account");
+                    Console.WriteLine("\n[2] Transaction to external account");
                     int accChoice = ValidOwnAccount("from");
                     fromAccount = accountArray[accChoice -1];
                     Console.WriteLine("Enter recieving account number: ");
-                    toAccount = adh.Load(Format.IntegerInput(6).ToString());
+                    int toAccountInt = Format.IntegerInput(6);
 
                     foreach (Account account in allAccounts)
                     {
-                        if (toAccount.AccountNumber == account.AccountNumber)
+                        if (account.AccountNumber == toAccountInt)
                         {
+                            toAccount = account;   //Kolla att denna kodrad är ok när transaktionen väl funkar
                             validToAccount = true;
-                            Console.WriteLine($"Reciever: ");  //Fundera på åtkomst till reciever
+                            string ownerID = toAccount.OwnerID;
+                            UserDataHandler udh = new UserDataHandler();
+                            Customer owner = (Customer)udh.Load(ownerID);
+                            Console.WriteLine($"Reciever: {owner.FirstName} {owner.LastName}");
                         }
                     }
                     if (validToAccount == false)
@@ -270,28 +273,38 @@ namespace TH_Bank
             }
             Console.WriteLine("Enter amount to transfer: ");
             decimal amount = Format.DecimalInput();
-            //Lägg till "if amount > Balance"... Balance verkar inte finnas för tillfället.
-
-            Console.WriteLine($"{amount} *currency?* will be tranferred from account {fromAccount.AccountNumber} to account {toAccount.AccountNumber}." +
-                $"\nDo you wish to continue? \n1. Yes\n2. No");
-            int proceed = Format.Choice(2);
-            if (proceed == 1)
+            if (amount > fromAccount.Balance)
             {
-                Transaction transaction = new TransactionFactory().CreateTransaction(amount, fromAccount, toAccount);
-                TransactionSender transactionSender = TransactionSender.GetInstance();
-                transactionSender.AddPendingTransaction(transaction);
+                Console.WriteLine("Transaction not possible. Check your balance.\nPress any key to return to menu.");
+                Console.ReadLine();
                 Console.Clear();
-                ShowAccounts(user, adh);
-                Console.WriteLine("Transaction complete.");
+                ShowMenu();
             }
-            else if (proceed == 2)
+            else
             {
-                Console.WriteLine("Transaction aborted.");
+                Console.WriteLine($"{amount} {fromAccount.Currency} will be tranferred from account {fromAccount.AccountNumber} to account {toAccount.AccountNumber}." +
+                $"\nDo you wish to continue? \n1. Yes\n2. No");
+                int proceed = Format.Choice(2);
+                if (proceed == 1)
+                {
+                    Transaction transaction = new TransactionFactory().CreateTransaction(amount, fromAccount, toAccount);
+                    TransactionSender transactionSender = TransactionSender.GetInstance();
+                    transactionSender.AddPendingTransaction(transaction);
+                    Console.Clear();
+                    ShowAccounts(user, adh);
+                    Console.WriteLine("\nTransaction complete.");
+                }
+                else if (proceed == 2)
+                {
+                    Console.WriteLine("Transaction aborted.");
+                }
+                Console.Write("Press any key to return to menu.");
+                Console.ReadLine();
+                Console.Clear();
+                ShowMenu();
             }
-            Console.Write("Press any key to return to menu.");
-            Console.ReadLine();
-            Console.Clear();
-            ShowMenu();
+
+            
         }
 
         public int ValidOwnAccount(string toOrFrom)
